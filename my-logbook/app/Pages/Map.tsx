@@ -1,10 +1,48 @@
 import React from 'react'
-import { View,Text } from 'react-native'
+import { StyleSheet, View,Text, SafeAreaView } from 'react-native';
+import MapView from 'react-native-maps'
+import { Card, Button } from 'react-native-paper';
 
-function Map() {
+
+export default function Map() {
   return (
-    <View><Text>Map</Text></View>
-  )
+    <>
+      
+
+        <MapView style={styles.map} 
+    initialRegion={{
+    latitude: -34.9263,
+    longitude: 138.5995,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  }}/>
+   <SafeAreaView>
+        <Card>
+          <View style={styles.cardActions}>
+            <Button style={styles.startButton}>Start</Button>
+            <Button style={styles.stopButton}>Stop</Button>
+          </View>
+        </Card>
+      </SafeAreaView>
+    </>
+  );
 }
 
-export default Map
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  map: {
+    width: '100%',
+    height: '90%',
+  },
+  cardActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 16, // Adjust the padding as needed
+  },
+  stopButton: {
+    // alignSelf: 'flex-end', // No longer needed
+  },
+  startButton: {},
+});

@@ -9,7 +9,7 @@ import Profile from './app/Pages/Profile';
 import SupervisorSignature from './app/Pages/SupervisorSignature';
 
 // fetch pages
-const MapRoute = () => <SafeAreaView><Map/></SafeAreaView>;
+const MapRoute = () => <Map/>;
 
 const ProfileRoute = () => <SafeAreaView><Profile/></SafeAreaView>;
 

@@ -1,10 +1,9 @@
 import React from 'react'
 import { View,Text } from 'react-native'
 
-function Profile() {
+export default function Profile() {
   return (
     <View><Text>Profile</Text></View>
   )
 }
 
-export default Profile
