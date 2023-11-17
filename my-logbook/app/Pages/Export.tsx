@@ -1,8 +1,9 @@
 import React from 'react'
+import { View,Text } from 'react-native'
 
 function Export() {
   return (
-    <div>Export</div>
+    <View><Text>Export</Text></View>
   )
 }
 

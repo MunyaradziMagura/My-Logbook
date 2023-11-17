@@ -1,8 +1,9 @@
 import React from 'react'
+import { View,Text } from 'react-native'
 
 function Map() {
   return (
-    <div>Map</div>
+    <View><Text>Map</Text></View>
   )
 }
 
