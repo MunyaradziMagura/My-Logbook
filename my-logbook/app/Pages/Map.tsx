@@ -1,25 +1,67 @@
-import React, { useState } from 'react'
-import { StyleSheet, View,Text, SafeAreaView } from 'react-native';
-import MapView from 'react-native-maps'
+import React, { useState,useEffect  } from 'react'
+import { StyleSheet, View,Text, SafeAreaView,ActivityIndicator } from 'react-native';
+import MapView, { Marker } from 'react-native-maps'
 import { Card, Button } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
+import * as Location from 'expo-location';
 
 
 export default function Map() {
   // this object controls all the values for the color of the background of the maps start and stop buttons
   const [getClickedGradient, setClickedGradient] = useState(['#090979','#00d4ff'])
 
+  // request location permissions
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  // boolean to check if we can display the map
+  const [displayMap, setDisplayMap] = useState(false)
 
+  useEffect(() => {
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return (
+          <SafeAreaView>      
+          <Text style={{width: '100%', height:'100%', justifyContent: 'center', alignContent: 'center', textAlign:'center'}}> ERROR FINDING LOCATION -- Permission to access location was denied </Text>
+        </SafeAreaView>
+        )
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      setDisplayMap(true)
+    })();
+  }, []);
+
+ 
+  // get the users current location 
+
+  // track the users current location 
+
+  if(displayMap === false){
+    return (
+      <ActivityIndicator size="large" color="#00ff00" style={styles.loading}></ActivityIndicator>
+    )
+  }
   return (
     <>
         <MapView style={styles.map} 
     initialRegion={{
-    latitude: -34.9263,
-    longitude: 138.5995,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  }}/>
+    latitude: location.coords.latitude,
+    longitude: location.coords.longitude,
+    latitudeDelta: 0.0001,
+    longitudeDelta: 0.01,
+
+  }}>
+    <Marker coordinate={{
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude
+        }}    
+    ></Marker>
+  </MapView>
    <SafeAreaView>
         <Card>
         <LinearGradient
@@ -56,6 +98,10 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '90%',
+  },
+  loading: {
+    width: '100%',
+    height: '100%',
   },
   cardActions: {
     flexDirection: 'row',
