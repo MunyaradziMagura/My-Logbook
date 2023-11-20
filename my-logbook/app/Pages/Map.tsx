@@ -1,6 +1,6 @@
-import React, { useState,useEffect  } from 'react'
-import { StyleSheet, View,Text, SafeAreaView,ActivityIndicator } from 'react-native';
-import MapView, { Marker } from 'react-native-maps'
+import React, { useState,useEffect } from 'react'
+import { StyleSheet, View,Text, SafeAreaView,ActivityIndicator,Image} from 'react-native';
+import MapView, { Callout, Marker } from 'react-native-maps'
 import { Card, Button } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -60,7 +60,8 @@ export default function Map() {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude
         }}    
-    ></Marker>
+    />
+    <Callout><Text>Youre here</Text></Callout>
   </MapView>
    <SafeAreaView>
         <Card>
