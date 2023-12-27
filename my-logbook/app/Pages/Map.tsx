@@ -67,7 +67,7 @@ export default function Map() {
 
   }
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <MapView style={styles.map}
         initialRegion={{
           latitude: location.coords.latitude,
@@ -83,7 +83,7 @@ export default function Map() {
         />
 
       </MapView>
-      <Card>
+      <Card style={styles.card}>
         <LinearGradient
           // Background Linear Gradient
           colors={getClickedGradient}
@@ -113,10 +113,12 @@ export default function Map() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
   },
   map: {
     width: '100%',
     height: '90%',
+    flex: 8.9,
   },
   loading: {
     width: '100%',
@@ -151,14 +153,13 @@ const styles = StyleSheet.create({
     top: 0,
     height: '100%',
   },
+  card: {
+    flex: 1.1,
+  },
   text: {
     paddingTop: 10,
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#fff'
   }
 });
-
-function componentWillUnmount() {
-  throw new Error('Function not implemented.');
-}
