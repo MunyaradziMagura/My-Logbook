@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, SafeAreaView, ActivityIndicator, Image } from 'react-native';
-import MapView, { Callout, Marker } from 'react-native-maps'
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { Card, Button } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -16,27 +16,6 @@ export default function Map() {
   const [errorMsg, setErrorMsg] = useState(null);
   // boolean to check if we can display the map
   const [displayMap, setDisplayMap] = useState(false);
-
-  // useEffect(() => {
-  //   (async () => {
-
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== 'granted') {
-  //       setErrorMsg('Permission to access location was denied');
-  //       return (
-  //         <SafeAreaView>
-  //           <Text style={{ width: '100%', height: '100%', justifyContent: 'center', alignContent: 'center', textAlign: 'center' }}> ERROR FINDING LOCATION -- Permission to access location was denied </Text>
-  //         </SafeAreaView>
-  //       )
-  //     }
-
-  //     let location = await Location.getCurrentPositionAsync({});
-  //     setLocation(location);
-  //     console.log(location)
-  //     setLocation(location);
-  //     setDisplayMap(true)
-  //   })();
-  // }, []);
   (async () => {
 
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -48,7 +27,6 @@ export default function Map() {
         </SafeAreaView>
       )
     }
-
     const location = await Location.getCurrentPositionAsync({});
     setLocation(location);
     setDisplayMap(true)
@@ -69,6 +47,7 @@ export default function Map() {
   return (
     <SafeAreaView style={styles.container}>
       <MapView style={styles.map}
+        provider={PROVIDER_GOOGLE}
         initialRegion={{
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
@@ -116,8 +95,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   map: {
-    width: '100%',
-    height: '90%',
     flex: 8.9,
   },
   loading: {
