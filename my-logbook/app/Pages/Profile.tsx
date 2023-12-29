@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 
 export default function Profile() {
   return (
-    <SafeAreaView
+    <View
       style={[
         styles.container,
         {
@@ -14,7 +14,7 @@ export default function Profile() {
       <View style={{ flex: 1, backgroundColor: 'red' }} />
       <View style={{ flex: 2, backgroundColor: 'darkorange' }} />
       <View style={{ flex: 3, backgroundColor: 'green' }} />
-    </SafeAreaView>
+    </View>
   );
 }
 const styles = StyleSheet.create({

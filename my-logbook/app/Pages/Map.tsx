@@ -5,7 +5,7 @@ import { Card, Button } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import * as Location from 'expo-location';
-
+import LoadingIndicator from './LoadingIndicator';
 
 export default function Map() {
   // this object controls all the values for the color of the background of the maps start and stop buttons
@@ -16,21 +16,30 @@ export default function Map() {
   const [errorMsg, setErrorMsg] = useState(null);
   // boolean to check if we can display the map
   const [displayMap, setDisplayMap] = useState(false);
-  (async () => {
 
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMsg('Permission to access location was denied');
-      return (
-        <SafeAreaView>
-          <Text style={{ width: '100%', height: '100%', justifyContent: 'center', alignContent: 'center', textAlign: 'center' }}> ERROR FINDING LOCATION -- Permission to access location was denied </Text>
-        </SafeAreaView>
-      )
-    }
-    const location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
-    setDisplayMap(true)
-  })();
+  useEffect(() => {
+    (async () => {
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return (
+          <SafeAreaView>
+            <Text style={{ width: '100%', height: '100%', justifyContent: 'center', alignContent: 'center', textAlign: 'center' }}> ERROR FINDING LOCATION -- Permission to access location was denied </Text>
+          </SafeAreaView>
+        )
+      }
+      const asyncLocation = await Location.getCurrentPositionAsync({});
+      setLocation(asyncLocation);
+
+      setDisplayMap(true)
+    })();
+
+    console.log(location)
+  }, [])
+  console.log(console.log(location))
+
+
 
   // get the users current location 
 
@@ -39,8 +48,7 @@ export default function Map() {
   if (displayMap === false) {
 
     return (
-      <ActivityIndicator size="large" color="#00ff00" style={styles.loading}></ActivityIndicator>
-
+      <LoadingIndicator LoadingText='Loading Location...' IndicatorColour='#90EE90' />
     )
 
   }
@@ -96,10 +104,6 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 8.9,
-  },
-  loading: {
-    width: '100%',
-    height: '100%',
   },
   cardActions: {
     flexDirection: 'row',
