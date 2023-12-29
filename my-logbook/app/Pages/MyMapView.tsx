@@ -24,6 +24,6 @@ export default function MyMapView({ location }) {
 }
 const styles = StyleSheet.create({
     map: {
-        flex: 8.9,
+        flex: 8.8,
     },
 });

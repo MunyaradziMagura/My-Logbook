@@ -11,9 +11,10 @@ export default function Map() {
   const [getClickedGradient, setClickedGradient] = useState(['#090979', '#00d4ff'])
 
   // request location permissions
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [locationMap, setLocationMap] = useState(null);
 
+  // message to user
+  const [message, setMessage] = useState('Click to Start')
   useEffect(() => {
 
 
@@ -23,19 +24,17 @@ export default function Map() {
 
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
-      setErrorMsg('Permission to access location was denied');
-      return (
-        <LoadingIndicator LoadingText={'ERROR FINDING LOCATION -- Permission to access location was denied' + errorMsg} IndicatorColour='#D70040' />
-      )
+      setMessage('Permission to access location was denied.\n\n iOS (General Steps):\n\n1. Open "Settings" on your iOS device.\n\n2. Scroll down and find your app in the list.\n\n3. Tap on your app to open its settings.\n\n4. Look for the "Location" option and tap it.\n\n5. Choose the appropriate location access option (e.g., "While Using the App") to grant location access.\n\n\n**Android (General Steps):**\n\n1. Open "Settings" on your Android device.\n\n2. Scroll down and select "Apps" or "Application Manager."\n\n3. Find and tap on your app in the list.\n\n4. Go to the "Permissions" section.\n\n5. Toggle the switch next to "Location" to grant location access. ')
+
     }
     const asyncLocation = await Location.getCurrentPositionAsync({});
-    setLocation(asyncLocation);
+    setLocationMap(<MyMapView location={asyncLocation} />);
   })();
 
   return (
     <SafeAreaView style={styles.container}>
       {/* here is where the map is visualised */
-        (location == null) ? <LoadingIndicator LoadingText='Click Start' IndicatorColour='#90EE90' FlexSize={10} /> : <MyMapView location={location} />
+        (locationMap == null) ? <LoadingIndicator LoadingText={message} IndicatorColour='#90EE90' FlexSize={8.7} sizeFont={30} /> : locationMap
       }
 
       <Card style={styles.card}>
@@ -52,6 +51,7 @@ export default function Map() {
           <BlurView intensity={100} style={styles.StartBlurContainer}>
             <Button onPress={() => {
               setClickedGradient(['rgba(14,174,87,1)', 'rgba(12,116,117,1)'])
+              setMessage("Getting your location, Please hold...")
               getLocation()
             }}><Text style={styles.text}>GO</Text></Button>
           </BlurView>

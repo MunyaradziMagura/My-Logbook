@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Text, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native'
-export default function LoadingIndicator({ LoadingText = "Loading...", IndicatorColour = "#0000ff", FlexSize = 1 }) {
+export default function LoadingIndicator({ LoadingText = "Loading...", IndicatorColour = "#0000ff", FlexSize = 1, sizeFont = 16 }) {
 
     const styles = StyleSheet.create({
         container: {
