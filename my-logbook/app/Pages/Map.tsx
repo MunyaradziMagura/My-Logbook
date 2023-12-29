@@ -13,42 +13,31 @@ export default function Map() {
   // request location permissions
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  // boolean to check if we can display the map
-  const [displayMap, setDisplayMap] = useState(false);
 
   useEffect(() => {
-    (async () => {
 
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return (
-          <LoadingIndicator LoadingText='ERROR FINDING LOCATION -- Permission to access location was denied' IndicatorColour='#D70040' />
-        )
-      }
-      const asyncLocation = await Location.getCurrentPositionAsync({});
-      setLocation(asyncLocation);
-      setDisplayMap(true)
-    })();
 
   }, [])
 
+  const getLocation = () => (async () => {
 
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      setErrorMsg('Permission to access location was denied');
+      return (
+        <LoadingIndicator LoadingText={'ERROR FINDING LOCATION -- Permission to access location was denied' + errorMsg} IndicatorColour='#D70040' />
+      )
+    }
+    const asyncLocation = await Location.getCurrentPositionAsync({});
+    setLocation(asyncLocation);
+  })();
 
-  // get the users current location 
-
-  // track the users current location 
-
-  if (displayMap === false) {
-
-    return (
-      <LoadingIndicator LoadingText='Loading Location...' IndicatorColour='#90EE90' />
-    )
-
-  }
   return (
     <SafeAreaView style={styles.container}>
-      <MyMapView location={location} />
+      {/* here is where the map is visualised */
+        (location == null) ? <LoadingIndicator LoadingText='Click Start' IndicatorColour='#90EE90' FlexSize={10} /> : <MyMapView location={location} />
+      }
+
       <Card style={styles.card}>
         <LinearGradient
           // Background Linear Gradient
@@ -57,11 +46,13 @@ export default function Map() {
           end={{ x: 1, y: 0.5 }}   // Right
           style={styles.background}
         />
-
+        {/* start and stop button */}
         <View style={styles.cardActions}>
+          {/* blur button */}
           <BlurView intensity={100} style={styles.StartBlurContainer}>
             <Button onPress={() => {
               setClickedGradient(['rgba(14,174,87,1)', 'rgba(12,116,117,1)'])
+              getLocation()
             }}><Text style={styles.text}>GO</Text></Button>
           </BlurView>
           <BlurView intensity={100} style={styles.StopBlurContainer}>
@@ -69,9 +60,7 @@ export default function Map() {
             <Button onPress={() => {
               setClickedGradient(['#fe6603', '#f42f4a'])
             }}>
-              <BlurView intensity={80} tint="light"><Text style={styles.text} >Stop</Text></BlurView>
-
-            </Button>
+              <Text style={styles.text} >Stop</Text></Button>
           </BlurView>
 
         </View>

@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native'
+export default function LoadingIndicator({ LoadingText = "Loading...", IndicatorColour = "#0000ff", FlexSize = 1 }) {
 
-export default function LoadingIndicator({ LoadingText = "Loading...", IndicatorColour = "#0000ff" }) {
-
+    const styles = StyleSheet.create({
+        container: {
+            flex: FlexSize,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        text: {
+            marginTop: 10,
+            fontSize: 16,
+        },
+    });
     return (
         <SafeAreaView
             style={[
@@ -12,16 +22,8 @@ export default function LoadingIndicator({ LoadingText = "Loading...", Indicator
             {LoadingText && <Text style={styles.text}>{LoadingText}</Text>}
         </SafeAreaView>
     );
+
 }
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    text: {
-        marginTop: 10,
-        fontSize: 16,
-    },
-});
+
+
 
