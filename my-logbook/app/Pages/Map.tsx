@@ -13,6 +13,7 @@ export default function Map() {
 
   // request location permissions
   const [location, setLocation] = useState(null);
+  const [locationHistory, setLocationHistory] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   // boolean to check if we can display the map
   const [displayMap, setDisplayMap] = useState(false);
@@ -20,23 +21,27 @@ export default function Map() {
   useEffect(() => {
     (async () => {
 
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      let ForegroundPermissions = await Location.requestForegroundPermissionsAsync();
+      let BackgroundPermissions = await Location.requestBackgroundPermissionsAsync();
+      if (ForegroundPermissions.status !== 'granted' && BackgroundPermissions.status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
         return (
           <SafeAreaView>
-            <Text style={{ width: '100%', height: '100%', justifyContent: 'center', alignContent: 'center', textAlign: 'center' }}> ERROR FINDING LOCATION -- Permission to access location was denied </Text>
+            <Text style={{ width: '100%', height: '100%', justifyContent: 'center', alignContent: 'center', textAlign: 'center' }}> ERROR FINDING LOCATION -- Permission to access location was denied. Please enable background and foreground location services. Foreground Location status: {ForegroundPermissions.status} | Background Location status: {ForegroundPermissions.status} </Text>
           </SafeAreaView>
         )
       }
       const asyncLocation = await Location.getCurrentPositionAsync({});
       setLocation(asyncLocation);
       setDisplayMap(true)
-    })();
+    });
 
   }, [])
 
 
+  useEffect(() => {
+    console.log("hello world location updated!!!", location)
+  }, [location])
 
   // get the users current location 
 
@@ -65,7 +70,6 @@ export default function Map() {
           longitude: location.coords.longitude
         }}
         />
-
       </MapView>
       <Card style={styles.card}>
         <LinearGradient
