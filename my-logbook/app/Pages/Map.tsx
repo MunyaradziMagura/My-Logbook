@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, SafeAreaView, ActivityIndicator, Image } from 'react-native';
-import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import { Card, Button } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import * as Location from 'expo-location';
 import LoadingIndicator from './LoadingIndicator';
-
+import MyMapView from './MyMapView';
 export default function Map() {
   // this object controls all the values for the color of the background of the maps start and stop buttons
   const [getClickedGradient, setClickedGradient] = useState(['#090979', '#00d4ff'])
@@ -24,9 +23,7 @@ export default function Map() {
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
         return (
-          <SafeAreaView>
-            <Text style={{ width: '100%', height: '100%', justifyContent: 'center', alignContent: 'center', textAlign: 'center' }}> ERROR FINDING LOCATION -- Permission to access location was denied </Text>
-          </SafeAreaView>
+          <LoadingIndicator LoadingText='ERROR FINDING LOCATION -- Permission to access location was denied' IndicatorColour='#D70040' />
         )
       }
       const asyncLocation = await Location.getCurrentPositionAsync({});
@@ -51,22 +48,7 @@ export default function Map() {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <MapView style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.0001,
-          longitudeDelta: 0.01,
-
-        }}>
-        <Marker coordinate={{
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude
-        }}
-        />
-
-      </MapView>
+      <MyMapView location={location} />
       <Card style={styles.card}>
         <LinearGradient
           // Background Linear Gradient
@@ -86,7 +68,10 @@ export default function Map() {
 
             <Button onPress={() => {
               setClickedGradient(['#fe6603', '#f42f4a'])
-            }}><Text style={styles.text} >Stop</Text></Button>
+            }}>
+              <BlurView intensity={80} tint="light"><Text style={styles.text} >Stop</Text></BlurView>
+
+            </Button>
           </BlurView>
 
         </View>
@@ -98,9 +83,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-  },
-  map: {
-    flex: 8.9,
   },
   cardActions: {
     flexDirection: 'row',
