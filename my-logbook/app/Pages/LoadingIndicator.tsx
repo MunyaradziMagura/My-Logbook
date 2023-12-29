@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native'
+import { Text, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native'
 
 export default function LoadingIndicator({ LoadingText = "Loading...", IndicatorColour = "#0000ff" }) {
 

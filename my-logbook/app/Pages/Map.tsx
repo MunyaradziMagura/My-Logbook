@@ -31,13 +31,10 @@ export default function Map() {
       }
       const asyncLocation = await Location.getCurrentPositionAsync({});
       setLocation(asyncLocation);
-
       setDisplayMap(true)
     })();
 
-    console.log(location)
   }, [])
-  console.log(console.log(location))
 
 
 
