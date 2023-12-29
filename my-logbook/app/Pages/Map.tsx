@@ -10,49 +10,63 @@ import LoadingIndicator from './LoadingIndicator';
 export default function Map() {
   // this object controls all the values for the color of the background of the maps start and stop buttons
   const [getClickedGradient, setClickedGradient] = useState(['#090979', '#00d4ff'])
-
   // request location permissions
   const [location, setLocation] = useState(null);
+  const [locationStatus, setLocationStatus] = useState({ foregroundStatus: false, backgroundStatus: false })
   const [locationHistory, setLocationHistory] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   // boolean to check if we can display the map
   const [displayMap, setDisplayMap] = useState(false);
 
-  useEffect(() => {
-    (async () => {
 
-      let ForegroundPermissions = await Location.requestForegroundPermissionsAsync();
-      let BackgroundPermissions = await Location.requestBackgroundPermissionsAsync();
-      if (ForegroundPermissions.status !== 'granted' && BackgroundPermissions.status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+
+  //  ERROR FINDING LOCATION -- Permission to access location was denied. Please enable background and foreground location services. Foreground Location status: {ForegroundPermissions.status} | Background Location status: {ForegroundPermissions.status} 
+
+  useEffect(() => {
+    const getLocation = async () => {
+      try {
+        let ForegroundPermissions = await Location.requestForegroundPermissionsAsync();
+        let BackgroundPermissions = await Location.requestBackgroundPermissionsAsync();
+
+        if (ForegroundPermissions.status !== 'granted' || BackgroundPermissions.status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          console.error('Permission denied');
+          return;
+        }
+
+        const asyncLocation = await Location.getCurrentPositionAsync();
+        setLocationStatus({ foregroundStatus: true, backgroundStatus: true });
+        setLocation(asyncLocation);
+        setDisplayMap(true);
+      } catch (error) {
+        console.error('Error getting location:', error);
+        setErrorMsg('Error getting location');
         return (
-          <SafeAreaView>
-            <Text style={{ width: '100%', height: '100%', justifyContent: 'center', alignContent: 'center', textAlign: 'center' }}> ERROR FINDING LOCATION -- Permission to access location was denied. Please enable background and foreground location services. Foreground Location status: {ForegroundPermissions.status} | Background Location status: {ForegroundPermissions.status} </Text>
-          </SafeAreaView>
+          <LoadingIndicator LoadingText='Loading Location...' IndicatorColour='#90EE90' />
         )
       }
-      const asyncLocation = await Location.getCurrentPositionAsync({});
-      setLocation(asyncLocation);
-      setDisplayMap(true)
-    });
+    };
 
-  }, [])
-
-
-  useEffect(() => {
-    console.log("hello world location updated!!!", location)
-  }, [location])
+    getLocation();
+  }, []);
 
   // get the users current location 
 
   // track the users current location 
 
-  if (displayMap === false) {
+  // location permissions are denied
+  if (displayMap == false) {
 
     return (
       <LoadingIndicator LoadingText='Loading Location...' IndicatorColour='#90EE90' />
     )
 
+  } else if (locationStatus.backgroundStatus == false || locationStatus.foregroundStatus == false) {
+
+    return (
+      <LoadingIndicator LoadingText={'ERROR FINDING LOCATION -- Permission to access location was denied. Please enable background and foreground location services. Foreground Location status: ' + locationStatus.foregroundStatus + 'Background Location status: ' + locationStatus.backgroundStatus} IndicatorColour='#D70040' />
+    )
+    // getting location
   }
   return (
     <SafeAreaView style={styles.container}>
@@ -97,6 +111,7 @@ export default function Map() {
       </Card>
     </SafeAreaView>
   );
+
 }
 const styles = StyleSheet.create({
   container: {
