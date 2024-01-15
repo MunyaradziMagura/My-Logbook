@@ -14,7 +14,7 @@ export default function Map() {
   const [locationMap, setLocationMap] = useState(null);
 
   // message to user
-  const [message, setMessage] = useState('Click to Start')
+  const [message, setMessage] = useState('Click "GO" to Start')
   useEffect(() => {
 
 
