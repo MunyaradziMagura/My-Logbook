@@ -12,13 +12,17 @@ export default function Map() {
 
   // request location permissions
   const [locationMap, setLocationMap] = useState(null);
-
+  const [location, setLocation] = useState(null);
   // message to user
   const [message, setMessage] = useState('Click "GO" to Start')
   useEffect(() => {
+    (async () => {
 
-
-  }, [])
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      console.log(location)
+    })();
+  }, []);
 
   const getLocation = () => (async () => {
 
@@ -28,12 +32,14 @@ export default function Map() {
 
     }
     const asyncLocation = await Location.getCurrentPositionAsync({});
+    setLocation(asyncLocation)
     setLocationMap(<MyMapView location={asyncLocation} />);
   })();
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* here is where the map is visualised */
+      {
+        /* here is where the map is visualised */
         (locationMap == null) ? <LoadingIndicator LoadingText={message} IndicatorColour='#90EE90' FlexSize={8.7} sizeFont={30} /> : locationMap
       }
 
