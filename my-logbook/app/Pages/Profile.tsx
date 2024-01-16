@@ -1,15 +1,16 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import AccountComponent from './AccountComponent';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Profile() {
   return (
     <View style={styles.container}>
-      <View style={styles.profileSection}>
+      <SafeAreaView style={styles.profileSection}>
         {/* First Third */}
         <AccountComponent LicenseNo={"DF7810"} Name={'Jane Doe'} DOB={'11/12/1999'} Class={'C'} />
 
-      </View>
+      </SafeAreaView>
       <View style={styles.listSection}>
         {/* Second Third */}
       </View>
