@@ -20,7 +20,7 @@ export default function TripList() {
                 visible={visible}
                 onRequestClose={() => setVisible(false)}
             >
-                <View style={styles.modalContainer}>
+                <BlurView intensity={100} style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         {/* Your modal content goes here */}
                         <Text>This is the modal content</Text>
@@ -29,14 +29,15 @@ export default function TripList() {
                             <Text>Close Modal</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </BlurView>
+
             </Modal>
+
             <List.Section>
                 {a.map((number, pos) => (
                     <BlurView intensity={100} style={styles.itemBlur} key={pos} >
                         <List.Subheader onPress={() => setVisible(true)} >
                             <Text>{number + pos}</Text>
-
                         </List.Subheader>
                     </BlurView>
                 ))}
@@ -55,10 +56,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     },
     modalContent: {
-        width: Dimensions.get('window').width * 0.8,
+        width: Dimensions.get('window').width * 0.9,
+        height: Dimensions.get('window').width * 2,
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 10,
