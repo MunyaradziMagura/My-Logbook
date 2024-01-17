@@ -20,8 +20,11 @@ export default function Map() {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+
+
       console.log(location)
     })();
+    if (locationMap !== null) setLocationMap(<MyMapView location={location} />);
   }, []);
 
   const getLocation = () => (async () => {
