@@ -5,7 +5,7 @@ import { Alert, Button, Dimensions, Modal, Pressable, SafeAreaView, ScrollView, 
 import { Divider, IconButton, List } from 'react-native-paper';
 import MyMapView from '../MyMapView';
 import { useFonts } from 'expo-font';
-export default function TripDetails() {
+export default function TripDetails({ setVisible: boolean }) {
     const location = { "coords": { "accuracy": 35, "altitude": 17.99403190612793, "altitudeAccuracy": 3.3440637588500977, "heading": -1, "latitude": -34.8102192325252, "longitude": 138.62078193792792, "speed": -1 }, "timestamp": 1705452190520.556 }
     const [visible, setVisible] = useState(false)
     const [fontsLoaded] = useFonts({

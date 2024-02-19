@@ -1,13 +1,23 @@
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import { useState } from 'react';
-import { Alert, Button, Dimensions, Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Divider, IconButton, List } from 'react-native-paper';
-import MyMapView from './MyMapView';
+import { ScrollView, StyleSheet, Text } from 'react-native';
+import { List } from 'react-native-paper';
+import TripDetails from './ProfileSubComponents/TripDetails';
 import { useFonts } from 'expo-font';
 export default function TripList() {
     const location = { "coords": { "accuracy": 35, "altitude": 17.99403190612793, "altitudeAccuracy": 3.3440637588500977, "heading": -1, "latitude": -34.8102192325252, "longitude": 138.62078193792792, "speed": -1 }, "timestamp": 1705452190520.556 }
+    // trip details visibility
     const [visible, setVisible] = useState(false)
+    // Selected trip
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    const handleTripSelection = (number, pos) => {
+        console.log("works")
+        setVisible(true);
+        setSelectedItem({ number, pos });
+    };
+
     const [fontsLoaded] = useFonts({
         "Oswald-Bold": require("my-logbook/assets/Font/Oswald/static/Oswald-Bold.ttf"),
         "Oswald-ExtraLight": require("my-logbook/assets/Font/Oswald/static/Oswald-ExtraLight.ttf"),
@@ -31,16 +41,15 @@ export default function TripList() {
             <List.Section>
                 {a.map((number, pos) => (
                     <BlurView intensity={100} style={styles.itemBlur} key={pos} >
-                        <List.Subheader onPress={() => setVisible(true)} >
-                            <Text>{number + pos}</Text>
+                        <List.Subheader onPress={() => handleTripSelection(number, pos)} >
+                            <Text>{number}</Text>
                         </List.Subheader>
                     </BlurView>
                 ))}
             </List.Section>
+            {visible && <TripDetails setVisible={setVisible} />}
         </ScrollView>
-
     )
-
 }
 const styles = StyleSheet.create({
     itemBlur: {
