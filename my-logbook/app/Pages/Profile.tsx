@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import AccountComponent from './AccountComponent';
+import TripList from './TripList'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Profile() {
@@ -13,6 +14,7 @@ export default function Profile() {
       </SafeAreaView>
       <View style={styles.listSection}>
         {/* Second Third */}
+        <TripList />
       </View>
     </View>
   );
