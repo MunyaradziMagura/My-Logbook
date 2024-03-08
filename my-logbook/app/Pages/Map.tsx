@@ -28,9 +28,7 @@ export default function Map() {
       Location.watchPositionAsync(
         { accuracy: Location.Accuracy.High, timeInterval: 120000 },
         (newLocation) => {
-          if (newLocation !== track.pop()){
-            console.log(track)
-          
+          if (newLocation !== track.pop()){          
             setLocation(newLocation);
             setTrack((prevTrack) => [...prevTrack, { latitude: newLocation.coords.latitude, longitude: newLocation.coords.longitude }]);
             if (mapRef.current) {
@@ -56,8 +54,10 @@ export default function Map() {
 
     const asyncLocation = await Location.getCurrentPositionAsync({});
     setLocation(asyncLocation);
-    setTrack([{ latitude: asyncLocation.coords.latitude, longitude: asyncLocation.coords.longitude }]);
+    setTrack((prevTrack) => [...prevTrack, { latitude: asyncLocation.coords.latitude, longitude: asyncLocation.coords.longitude }]);
     setLocationMap(<MyMapView location={asyncLocation} track={track} ref={mapRef} />);
+    console.log(track)
+
   };
 
   return (
