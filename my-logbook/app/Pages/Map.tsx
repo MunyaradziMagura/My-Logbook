@@ -13,6 +13,7 @@ export default function Map() {
   const [location, setLocation] = useState(null);
   const [message, setMessage] = useState('Click "GO" to Start');
   const [track, setTrack] = useState([]); // Array to store the user's location history
+  const [previousLocation, setPreviousLocation] = useState(null); // Array to store the user's location history
 
   const mapRef = useRef(null);
 
@@ -28,9 +29,12 @@ export default function Map() {
       Location.watchPositionAsync(
         { accuracy: Location.Accuracy.High, timeInterval: 120000 },
         (newLocation) => {
-          if (newLocation !== track.pop()){          
+          if (newLocation !== track[track.length -1]){          
             setLocation(newLocation);
-            setTrack((prevTrack) => [...prevTrack, { latitude: newLocation.coords.latitude, longitude: newLocation.coords.longitude }]);
+            // add new location to array
+            addLocation({latitude: newLocation.coords.latitude, longitude: newLocation.coords.longitude })
+            //setTrack((prevTrack) => [...prevTrack, { latitude: newLocation.coords.latitude, longitude: newLocation.coords.longitude }]);
+            
             if (mapRef.current) {
               mapRef.current.fitToCoordinates(track, { edgePadding: { top: 50, right: 50, bottom: 50, left: 50 }, animated: true });
             }
@@ -45,6 +49,7 @@ export default function Map() {
     }
   }, [location, locationMap, track]);
 
+  // get location permissions and current location of user
   const getLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
@@ -54,12 +59,29 @@ export default function Map() {
 
     const asyncLocation = await Location.getCurrentPositionAsync({});
     setLocation(asyncLocation);
-    setTrack((prevTrack) => [...prevTrack, { latitude: asyncLocation.coords.latitude, longitude: asyncLocation.coords.longitude }]);
+    // set starting location
+    if(previousLocation == undefined) { 
+      setTrack((prevTrack) => [...prevTrack, { latitude: asyncLocation.coords.latitude, longitude: asyncLocation.coords.longitude }])
+    }else{
+      addLocation({ latitude: asyncLocation.coords.latitude, longitude: asyncLocation.coords.longitude })
+      //setTrack((prevTrack) => [...prevTrack, { latitude: asyncLocation.coords.latitude, longitude: asyncLocation.coords.longitude }]);  
+    }
+
     setLocationMap(<MyMapView location={asyncLocation} track={track} ref={mapRef} />);
-    console.log(track)
 
   };
+  // add a new location to the location array
+  const addLocation = async (location) => {    
+    setPreviousLocation(track[track.length -1])
+    // check if the latest value in the track array is different from the current location
+    if(location['latitude'] !== previousLocation['latitude'] && location['longitude'] !== previousLocation['longitude']){
+      setTrack((prevTrack) => [...prevTrack, location]);
+      console.log({'current location': location,'last location': track[track.length -1], 'track length': track.length -1})
+    }
 
+
+
+  } 
   return (
     <SafeAreaView style={styles.container}>
       {locationMap === null ? (
