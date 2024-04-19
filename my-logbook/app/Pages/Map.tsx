@@ -29,18 +29,23 @@ export default function Map() {
       Location.watchPositionAsync(
         { accuracy: Location.Accuracy.High, timeInterval: 120000 },
         (newLocation) => {
-          if (newLocation !== track[track.length -1]){          
-            setLocation(newLocation);
+          if (track.length <= 0) {
+            // check if the previous location is the same as the current location 
+            setTrack([{ latitude: newLocation.coords.latitude, longitude: newLocation.coords.longitude }])
+
+          } else if (newLocation.coords.latitude !== track[track.length - 1]['latitude'] && newLocation.coords.longitude !== track[track.length - 1]['longitude']) {
+            //setLocation(newLocation);
             // add new location to array
-            addLocation({latitude: newLocation.coords.latitude, longitude: newLocation.coords.longitude })
+            //addLocation({ latitude: newLocation.coords.latitude, longitude: newLocation.coords.longitude })
             //setTrack((prevTrack) => [...prevTrack, { latitude: newLocation.coords.latitude, longitude: newLocation.coords.longitude }]);
-            
+
             if (mapRef.current) {
               mapRef.current.fitToCoordinates(track, { edgePadding: { top: 50, right: 50, bottom: 50, left: 50 }, animated: true });
             }
             getLocation()
           }
         }
+        //////////////////////////////////////////////////
       );
     })();
 
@@ -60,28 +65,31 @@ export default function Map() {
     const asyncLocation = await Location.getCurrentPositionAsync({});
     setLocation(asyncLocation);
     // set starting location
-    if(previousLocation == undefined) { 
+    if (previousLocation == undefined) {
       setTrack((prevTrack) => [...prevTrack, { latitude: asyncLocation.coords.latitude, longitude: asyncLocation.coords.longitude }])
-    }else{
-      addLocation({ latitude: asyncLocation.coords.latitude, longitude: asyncLocation.coords.longitude })
-      //setTrack((prevTrack) => [...prevTrack, { latitude: asyncLocation.coords.latitude, longitude: asyncLocation.coords.longitude }]);  
+      //setLocationMap(<MyMapView location={asyncLocation} track={track} ref={mapRef} />);
     }
+    addLocation({ latitude: asyncLocation.coords.latitude, longitude: asyncLocation.coords.longitude })
+    //setLocationMap(<MyMapView location={asyncLocation} track={track} ref={mapRef} />);
 
-    setLocationMap(<MyMapView location={asyncLocation} track={track} ref={mapRef} />);
+    //setTrack((prevTrack) => [...prevTrack, { latitude: asyncLocation.coords.latitude, longitude: asyncLocation.coords.longitude }]);  
+
+    setLocationMap(<MyMapView location={asyncLocation} track={track} />);
 
   };
   // add a new location to the location array
-  const addLocation = async (location) => {    
-    setPreviousLocation(track[track.length -1])
+  const addLocation = async (location) => {
+
+    setPreviousLocation(track[track.length - 1])
     // check if the latest value in the track array is different from the current location
-    if(location['latitude'] !== previousLocation['latitude'] && location['longitude'] !== previousLocation['longitude']){
+    if (location['latitude'] !== previousLocation['latitude'] && location['longitude'] !== previousLocation['longitude']) {
       setTrack((prevTrack) => [...prevTrack, location]);
-      console.log({'current location': location,'last location': track[track.length -1], 'track length': track.length -1})
+      console.log({ 'current location': location, 'last location': track[track.length - 1], 'track length': track.length })
+
+      setLocationMap(<MyMapView location={location} track={track} />);
     }
 
-
-
-  } 
+  }
   return (
     <SafeAreaView style={styles.container}>
       {locationMap === null ? (

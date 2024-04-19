@@ -2,10 +2,9 @@ import React from 'react';
 import MapView, { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps';
 import { StyleSheet } from 'react-native';
 
-export default function MyMapView({ location, track, ref }) {
+export default function MyMapView({ location, track }) {
   return (
     <MapView
-      ref={ref} // Pass the ref to the MapView component
       style={styles.map}
       provider={PROVIDER_GOOGLE}
       initialRegion={{
@@ -30,7 +29,7 @@ export default function MyMapView({ location, track, ref }) {
         <Polyline
           coordinates={track}
           strokeColor="#FF0000"
-          strokeWidth={2}
+          strokeWidth={9}
           lineCap="round"
           lineJoin="round"
         />
